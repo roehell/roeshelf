@@ -120,10 +120,12 @@
     border-bottom:2px solid var(--accent);
     padding:calc(14px + env(safe-area-inset-top, 0px)) 16px 10px;
   }
-  .hdr-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  h1{font-size:1.35rem;font-weight:700;letter-spacing:.3px}
+  .hdr-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  h1{font-size:1.2rem;font-weight:700;letter-spacing:.3px;white-space:nowrap;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
   h1 .book{color:var(--accent)}
-  .hdr-btns{display:flex;gap:8px}
+  .btn-theme{flex:0 0 auto}
+  .hdr-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%}
+  .hdr-btns .icon-btn{text-align:center}
   .icon-btn{
     background:var(--panel);border:1px solid var(--line);border-radius:10px;
     padding:7px 11px;cursor:pointer;font-size:.85rem;color:var(--ink-soft);
@@ -144,6 +146,11 @@
     scrollbar-width:none;
   }
   .chips::-webkit-scrollbar{display:none}
+  .chips{
+    -webkit-mask-image:linear-gradient(to right, black 0%, black calc(100% - 34px), transparent 100%);
+    mask-image:linear-gradient(to right, black 0%, black calc(100% - 34px), transparent 100%);
+  }
+  .chips.at-end{-webkit-mask-image:none;mask-image:none}
   .chip{
     flex:0 0 auto;border:1px solid var(--line);background:var(--card);
     border-radius:999px;padding:5px 13px;font-size:.82rem;cursor:pointer;
@@ -156,9 +163,16 @@
   .bc-type{
     flex:0 0 auto;font-size:.66rem;font-weight:700;letter-spacing:.4px;
     padding:3px 8px;border-radius:6px;text-transform:uppercase;
-    font-family:Verdana,sans-serif;background:var(--panel);color:var(--ink-soft);
-    border:1px solid var(--line);
+    font-family:Verdana,sans-serif;color:#fff;border:1px solid transparent;
   }
+  .bc-type.tp-novel{background:#E08E0B}
+  .bc-type.tp-manhwa{background:#5B8DD9}
+  .bc-type.tp-manhua{background:#4C9A6B}
+  .bc-type.tp-manga{background:#C97BB2}
+  .type-chips .chip.active.tc-novel{background:#E08E0B;border-color:#E08E0B;color:#fff}
+  .type-chips .chip.active.tc-manhwa{background:#5B8DD9;border-color:#5B8DD9;color:#fff}
+  .type-chips .chip.active.tc-manhua{background:#4C9A6B;border-color:#4C9A6B;color:#fff}
+  .type-chips .chip.active.tc-manga{background:#C97BB2;border-color:#C97BB2;color:#fff}
 
   .sort-row{display:flex;align-items:center;gap:8px;margin-top:8px}
   .sort-row label{font-size:.78rem;color:var(--ink-soft)}
@@ -347,18 +361,56 @@
   .vbar .vb-n{font-size:.7rem;color:var(--ink-soft);font-family:Verdana,sans-serif;margin:3px 0 2px}
   .vbar .vb-l{font-size:.78rem;color:var(--accent)}
   .btnStats-on{background:var(--accent) !important;color:#fff !important;border-color:var(--accent) !important}
-  @media(min-width:560px){
-    .fab{right:calc(50% - 300px)}
+  /* ---------- desktop layout ---------- */
+  .hdr-inner{max-width:1160px;margin:0 auto}
+  @media(min-width:700px){
+    h1{font-size:1.35rem;flex:0 1 auto}
+    .hdr-btns{display:flex;width:auto;margin-left:auto}
+    .hdr-row{flex-wrap:nowrap}
+    .btn-theme{order:3}
+    /* single filter row: chips + type chips + sort */
+    .hdr-inner{display:flex;flex-wrap:wrap;align-items:center;column-gap:20px}
+    .hdr-row,.search-row{width:100%}
+    .chips{flex:0 1 auto;overflow-x:visible;flex-wrap:wrap;row-gap:6px;padding-bottom:0;
+      -webkit-mask-image:none;mask-image:none}
+    .type-chips{margin-top:10px}
+    .sort-row{flex:1 0 auto;justify-content:flex-end;min-width:230px}
+    .sort-row select{flex:0 1 auto;min-width:180px}
+    .chips + .type-chips{position:relative;padding-left:20px}
+    .chips + .type-chips::before{
+      content:"";position:absolute;left:0;top:4px;bottom:4px;width:1px;background:var(--line);
+    }
+  }
+  /* sidebar dashboard from 980px */
+  @media(min-width:980px){
+    main{max-width:1160px;display:grid;grid-template-columns:300px 1fr;gap:22px;align-items:start;padding-top:20px}
+    #sideCol{position:sticky;top:150px}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+    .stat{padding:12px 8px}
+    .stat .n{font-size:1.4rem}
+    #statsPanel{display:block !important;margin-bottom:0}
+    #btnStats{display:none}
+    #list .book-card{margin-bottom:14px}
+    .fab{right:36px;bottom:32px}
+  }
+  /* extra-wide: two-column cards */
+  @media(min-width:1420px){
+    main{max-width:1420px}
+    .hdr-row,.search-row,.chips,.sort-row{max-width:1420px}
+    #list{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:start}
+    #list .book-card{margin-bottom:0}
+    #list .empty{grid-column:1 / -1}
   }
 </style>
 </head>
 <body>
 
 <header>
+<div class="hdr-inner">
   <div class="hdr-row">
     <h1><span class="book" id="hdrIcon">&#128214;</span> My Reading List</h1>
+    <button class="icon-btn btn-theme" id="btnTheme" title="Light / dark mode" aria-label="Toggle dark mode">&#9789;</button>
     <div class="hdr-btns">
-      <button class="icon-btn" id="btnTheme" title="Light / dark mode" aria-label="Toggle dark mode">&#9789;</button>
       <button class="icon-btn" id="btnStats" title="Charts &amp; stats">Stats</button>
       <button class="icon-btn" id="btnShare" title="Share a list">Share</button>
       <button class="icon-btn" id="btnExport" title="Export backup">Export</button>
@@ -380,12 +432,17 @@
       <option value="progress">Progress %</option>
     </select>
   </div>
+</div>
 </header>
 
 <main>
-  <div class="stats" id="stats"></div>
-  <section id="statsPanel" style="display:none"></section>
-  <div id="list"></div>
+  <div id="sideCol">
+    <div class="stats" id="stats"></div>
+    <section id="statsPanel" style="display:none"></section>
+  </div>
+  <div id="mainCol">
+    <div id="list"></div>
+  </div>
 </main>
 
 <button class="fab" id="fab" aria-label="Add a story">+</button>
@@ -516,7 +573,7 @@
   var STATUSES = { want:'Want to read', reading:'Reading', finished:'Finished', dropped:'Dropped' };
   var TYPES = { novel:'Novel', manhwa:'Manhwa', manhua:'Manhua', manga:'Manga' };
   var ST_COLORS = { reading:'#4C9A6B', want:'#5B8DD9', finished:'#FCA51D', dropped:'#B0A390' };
-  var TP_COLORS = { novel:'#FCA51D', manhwa:'#5B8DD9', manhua:'#4C9A6B', manga:'#C97BB2' };
+  var TP_COLORS = { novel:'#E08E0B', manhwa:'#5B8DD9', manhua:'#4C9A6B', manga:'#C97BB2' };
   var statsOpen = false;
 
   var books = load();
@@ -608,7 +665,7 @@
     books.forEach(function(b){ var t = b.type || 'novel'; if(counts[t] != null) counts[t]++; });
     var order = ['all','novel','manhwa','manhua','manga'];
     $('typeChips').innerHTML = order.map(function(k){
-      return '<button class="chip'+(typeFilter===k?' active':'')+'" data-t="'+k+'">'
+      return '<button class="chip tc-'+k+(typeFilter===k?' active':'')+'" data-t="'+k+'">'
         + (k==='all' ? 'All types' : TYPES[k]) + '<span class="cnt">'+counts[k]+'</span></button>';
     }).join('');
   }
@@ -675,7 +732,7 @@
         : esc(b.title);
       return '<div class="book-card st-'+esc(b.status)+'" data-id="'+esc(b.id)+'">'
         + '<div class="bc-top"><div class="bc-title">'+titleHtml+'</div>'
-        + '<span class="bc-type">'+(TYPES[b.type]||'Novel')+'</span>'
+        + '<span class="bc-type tp-'+esc(b.type||'novel')+'">'+(TYPES[b.type]||'Novel')+'</span>'
         + '<span class="bc-badge '+esc(b.status)+'">'+STATUSES[b.status]+'</span></div>'
         + (b.author ? '<div class="bc-author">'+esc(b.author)+'</div>' : '')
         + '<div class="bc-meta">'
@@ -735,8 +792,7 @@
 
   function renderStatsPanel(){
     var el = $('statsPanel');
-    if(!statsOpen){ el.style.display='none'; return; }
-    el.style.display='block';
+    el.style.display = statsOpen ? 'block' : 'none';
     if(!books.length){
       el.innerHTML = '<div class="chart-card"><h3>Charts</h3><p style="font-size:.85rem;color:var(--ink-soft)">Add some stories first and the charts will appear here.</p></div>';
       return;
@@ -1232,7 +1288,23 @@
     }
   });
 
+  function updateChipFades(){
+    ['chips','typeChips'].forEach(function(id){
+      var el = $(id);
+      if(!el) return;
+      var atEnd = el.scrollWidth - el.scrollLeft - el.clientWidth < 6;
+      el.classList.toggle('at-end', atEnd);
+    });
+  }
+  $('chips').addEventListener('scroll', updateChipFades, { passive:true });
+  $('typeChips').addEventListener('scroll', updateChipFades, { passive:true });
+  window.addEventListener('resize', updateChipFades);
+  var _renderChips = renderChips, _renderTypeChips = renderTypeChips;
+  renderChips = function(){ _renderChips(); updateChipFades(); };
+  renderTypeChips = function(){ _renderTypeChips(); updateChipFades(); };
+
   renderAll();
+  updateChipFades();
 })();
 </script>
 </body>
