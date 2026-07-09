@@ -1212,10 +1212,24 @@
     setType(book ? (book.type || 'novel') : 'novel');
     setRating(book ? (book.rating||0) : 0, book ? !!book.zero : false, book ? !!book.jaw : false);
     $('btnDelete').style.display = book ? 'block' : 'none';
+    sheetSnapshot = formSnapshot();
     $('overlay').classList.add('open');
     if(!book) setTimeout(function(){ $('fTitle').focus(); }, 250);
   }
-  function closeSheet(){ $('overlay').classList.remove('open'); }
+  var sheetSnapshot = '';
+  function formSnapshot(){
+    return [$('fTitle').value, $('fAlt').value, $('fAuthor').value, $('fLink').value,
+      curStatus, curType, $('fChCur').value, $('fChTot').value,
+      $('fStart').value, $('fEnd').value, curRating, curZero, curJaw,
+      $('fGenre').value, $('fTags2').value, $('fNotes').value, $('fReview').value].join('\u0001');
+  }
+  function sheetDirty(){ return formSnapshot() !== sheetSnapshot; }
+  function closeSheet(force){
+    if(!force && sheetDirty()){
+      if(!confirm('You have unsaved changes. Discard them?')) return;
+    }
+    $('overlay').classList.remove('open');
+  }
 
   function saveBook(){
     var title = $('fTitle').value.trim();
@@ -1243,7 +1257,7 @@
     };
     if(editId){
       for(var i=0;i<books.length;i++){
-        if(books[i].id === editId){
+        if(books[i] .id === editId){
           data.id = editId;
           data.added = books[i].added || now;
           books[i] = data;
@@ -1257,14 +1271,14 @@
       books.push(data);
       toast('Added to your shelf');
     }
-    save(); renderAll(); closeSheet();
+    save(); renderAll(); closeSheet(true);
   }
 
   function deleteBook(){
     if(!editId) return;
     if(!confirm('Delete this story? This cannot be undone.')) return;
     books = books.filter(function(b){ return b.id !== editId; });
-    save(); renderAll(); closeSheet();
+    save(); renderAll(); closeSheet(true);
     toast('Deleted');
   }
 
@@ -1747,7 +1761,7 @@
   $('btnCancel').addEventListener('click', closeSheet);
   $('btnSave').addEventListener('click', saveBook);
   $('btnDelete').addEventListener('click', deleteBook);
-  $('overlay').addEventListener('click', function(e){ if(e.target === this) closeSheet(); });
+  // backdrop tap does NOT close the edit sheet (protects typed work); use Cancel / X / Esc
 
   $('segStatus').addEventListener('click', function(e){
     var st = e.target.getAttribute && e.target.getAttribute('data-st');
