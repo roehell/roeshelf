@@ -210,6 +210,7 @@
   .bc-badge.want{background:var(--want)}
   .bc-badge.finished{background:var(--finished)}
   .bc-badge.dropped{background:var(--dropped)}
+  .bc-alt{font-size:.78rem;color:var(--ink-soft);margin-top:2px}
   .bc-author{font-size:.85rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
   .bc-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;align-items:center}
   .bc-stars{color:var(--accent);font-size:.95rem;letter-spacing:2px}
@@ -566,6 +567,10 @@
       <input id="fTitle" type="text" placeholder="e.g. Agreement Mark">
     </div>
     <div class="fld">
+      <label for="fAlt">Alternative title(s)</label>
+      <input id="fAlt" type="text" placeholder="Original / romaji / other names &mdash; separate with ;">
+    </div>
+    <div class="fld">
       <label for="fAuthor">Author</label>
       <input id="fAuthor" type="text" placeholder="Author name">
     </div>
@@ -866,7 +871,7 @@
       if(filter !== 'all' && b.status !== filter) return false;
       if(typeFilter !== 'all' && (b.type || 'novel') !== typeFilter) return false;
       if(q){
-        var hay = (b.title+' '+(b.author||'')+' '+(b.notes||'')+' '+(b.review||'')+' '+(b.genre||'')).toLowerCase();
+        var hay = (b.title+' '+(b.alt||'')+' '+(b.author||'')+' '+(b.notes||'')+' '+(b.review||'')+' '+(b.genre||'')).toLowerCase();
         if(hay.indexOf(q) === -1) return false;
       }
       return true;
@@ -894,6 +899,7 @@
         + (b.review ? '<span class="bc-rev" title="Has a full review">&#128221;</span>' : '')
         + '<span class="bc-type tp-'+esc(b.type||'novel')+'">'+(TYPES[b.type]||'Novel')+'</span>'
         + '<span class="bc-badge '+esc(b.status)+'">'+STATUSES[b.status]+'</span></div>'
+        + (b.alt ? '<div class="bc-alt">'+esc(b.alt)+'</div>' : '')
         + (b.author ? '<div class="bc-author">'+esc(b.author)+'</div>' : '')
         + '<div class="bc-meta">'
         + (b.zero ? '<span class="bc-zero" title="We were all rooting for you">0&#9733;</span>' : (b.rating ? '<span class="bc-stars">'+starsHtml(b.rating)+'</span>' : ''))
@@ -1060,6 +1066,7 @@
     editId = book ? book.id : null;
     $('sheetTitle').textContent = book ? 'Edit story' : 'Add a story';
     $('fTitle').value  = book ? book.title : '';
+    $('fAlt').value    = book ? (book.alt||'') : '';
     $('fAuthor').value = book ? (book.author||'') : '';
     $('fLink').value   = book ? (book.link||'') : '';
     $('fChCur').value  = book && book.chCur ? book.chCur : '';
@@ -1086,6 +1093,7 @@
     var now = Date.now();
     var data = {
       title: title,
+      alt: $('fAlt').value.trim(),
       author: $('fAuthor').value.trim(),
       link: $('fLink').value.trim(),
       status: curStatus,
@@ -1247,6 +1255,7 @@
     var html = '<div class="vw-title">' + (book.link
       ? '<a href="'+esc(book.link)+'" target="_blank" rel="noopener">'+esc(book.title)+'</a>'
       : esc(book.title)) + '</div>';
+    if(book.alt) html += '<div class="bc-alt" style="margin:-2px 0 4px">'+esc(book.alt)+'</div>';
     if(book.author) html += '<div class="vw-author">'+esc(book.author)+'</div>';
     html += '<div class="vw-badges">'
       + '<span class="bc-type tp-'+esc(book.type||'novel')+'">'+(TYPES[book.type]||'Novel')+'</span>'
