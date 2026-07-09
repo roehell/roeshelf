@@ -299,6 +299,52 @@
   .btn-ghost{background:var(--panel);color:var(--ink-soft);border:1px solid var(--line)}
   .btn-danger{background:none;border:none;color:var(--danger);font-size:.85rem;margin-top:14px;width:100%;cursor:pointer;text-decoration:underline;padding:8px}
 
+  .review-ta{min-height:160px;border-radius:0 0 10px 10px !important;border-top:none !important}
+  .rev-toolbar{
+    display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);
+    border-bottom:none;border-radius:10px 10px 0 0;padding:6px 8px;align-items:center;
+  }
+  .rev-toolbar button{
+    background:var(--card);border:1px solid var(--line);border-radius:7px;
+    padding:4px 11px;font-size:.82rem;cursor:pointer;color:var(--ink);
+  }
+  .rev-toolbar button:active{background:var(--line)}
+  .rev-toolbar .rev-pv{margin-left:auto;color:var(--accent-dark);font-weight:700}
+  .rev-toolbar .rev-pv.on{background:var(--accent);border-color:var(--accent);color:#fff}
+  .rev-preview{min-height:160px;border-radius:0 0 10px 10px;border-top:none}
+  .vw-review h4{font-size:1rem;margin:4px 0 8px;border-bottom:1px solid var(--line);padding-bottom:4px}
+  .vw-review ul{margin:0 0 10px 20px;padding:0}
+  .vw-review li{margin-bottom:4px}
+  .bc-rev{
+    flex:0 0 auto;font-size:.72rem;color:var(--ink-soft);
+  }
+  .vw-review{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:13px 15px;font-size:.92rem;line-height:1.6;
+  }
+  .vw-review p{margin:0 0 10px}
+  .vw-review p:last-child{margin-bottom:0}
+  .copy-rev{
+    background:none;border:none;color:var(--accent-dark);font-size:.78rem;
+    cursor:pointer;text-decoration:underline;padding:2px 4px;margin-left:8px;
+  }
+  .storage-bar{height:12px;background:var(--panel);border-radius:6px;overflow:hidden;margin-top:8px}
+  .storage-bar span{display:block;height:100%;background:var(--accent);border-radius:6px}
+  .storage-txt{font-size:.82rem;color:var(--ink-soft);margin-top:7px}
+  .lg-item{cursor:pointer;border-radius:7px;padding:2px 5px;margin-left:-5px}
+  .lg-item:hover{background:var(--panel)}
+  .hbar-click{cursor:pointer;border-radius:8px;padding:4px 6px;margin:0 -6px 4px}
+  .hbar-click:hover{background:var(--panel)}
+  .hbar-click .hbar{margin-bottom:0}
+  .peek-row{
+    display:flex;align-items:center;gap:10px;padding:10px 4px;
+    border-bottom:1px solid var(--line);cursor:pointer;border-radius:8px;
+  }
+  .peek-row:hover{background:var(--panel)}
+  .peek-row:last-child{border-bottom:none}
+  .peek-row .pk-title{flex:1;font-weight:700;font-size:.92rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .peek-row .bc-stars{font-size:.82rem}
+  .peek-more{font-size:.8rem;color:var(--ink-soft);padding:8px 4px 0;text-align:center}
   .vw-title{font-size:1.2rem;font-weight:700;line-height:1.3;margin-bottom:2px}
   .vw-title a{color:var(--accent-dark);text-decoration:none;border-bottom:1px dotted var(--accent)}
   .vw-author{font-style:italic;color:var(--ink-soft);margin-bottom:10px}
@@ -361,7 +407,7 @@
   }
   .donut-wrap{display:flex;align-items:center;gap:16px}
   .donut-wrap svg{flex:0 0 auto}
-  .legend{flex:1;font-size:.8rem}
+  .legend{flex:1;font-size:.8rem;max-width:250px}
   .legend div{display:flex;align-items:center;gap:7px;margin-bottom:4px}
   .legend .dot{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
   .legend .lv{margin-left:auto;color:var(--ink-soft);font-family:Verdana,sans-serif;font-size:.72rem}
@@ -370,12 +416,24 @@
   .hbar .hb-label .n{color:var(--ink-soft);font-family:Verdana,sans-serif;font-size:.72rem}
   .hbar .hb-track{height:12px;background:var(--panel);border-radius:6px;overflow:hidden}
   .hbar .hb-fill{height:100%;border-radius:6px;background:var(--accent)}
-  .vbars{display:flex;align-items:flex-end;gap:10px;height:110px;padding-top:6px}
+  .vbars{display:flex;align-items:flex-end;gap:10px;height:110px;padding-top:6px;max-width:340px}
   .vbar{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;justify-content:flex-end}
   .vbar .vb-fill{width:70%;max-width:44px;background:var(--accent);border-radius:5px 5px 0 0;min-height:2px}
   .vbar .vb-n{font-size:.7rem;color:var(--ink-soft);font-family:Verdana,sans-serif;margin:3px 0 2px}
   .vbar .vb-l{font-size:.78rem;color:var(--accent)}
   .btnStats-on{background:var(--accent) !important;color:#fff !important;border-color:var(--accent) !important}
+  /* centered dialogs on desktop */
+  @media(min-width:700px){
+    .overlay{align-items:center;padding:24px}
+    .sheet{border-radius:18px;max-width:560px;max-height:86vh;
+      animation:popIn .18s ease}
+  }
+  @keyframes popIn{from{transform:scale(.96);opacity:.5}to{transform:scale(1);opacity:1}}
+  html[data-theme="cinna"] .sheet{border-radius:28px 28px 0 0}
+  @media(min-width:700px){
+    html[data-theme="cinna"] .sheet{border-radius:28px}
+  }
+
   /* ---------- desktop layout ---------- */
   .hdr-inner{max-width:1160px;margin:0 auto}
   @media(min-width:700px){
@@ -404,10 +462,20 @@
     .stat{padding:12px 8px}
     .stat .n{font-size:1.4rem}
     #statsPanel{display:block !important;margin-bottom:0}
-    #btnStats{display:none}
     #list .book-card{margin-bottom:14px}
     .fab{right:36px;bottom:32px}
   }
+  /* stats-only mode */
+  body.stats-mode #mainCol{display:none}
+  body.stats-mode .fab{display:none}
+  @media(min-width:980px){
+    body.stats-mode main{display:block}
+    body.stats-mode #sideCol{position:static}
+    body.stats-mode .stats{grid-template-columns:repeat(4,1fr)}
+    body.stats-mode #statsPanel{display:grid !important;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px;align-items:start}
+    body.stats-mode .chart-card{margin-bottom:0}
+  }
+
   /* extra-wide: two-column cards */
   @media(min-width:1420px){
     main{max-width:1420px}
@@ -531,7 +599,19 @@
     </div>
     <div class="fld">
       <label for="fNotes">Notes</label>
-      <textarea id="fNotes" placeholder="Thoughts, warnings, where you left off&hellip;"></textarea>
+      <textarea id="fNotes" placeholder="Quick thoughts, warnings, where you left off&hellip;"></textarea>
+    </div>
+    <div class="fld">
+      <label for="fReview">Full review (optional)</label>
+      <div class="rev-toolbar" id="revToolbar">
+        <button type="button" data-md="bold" title="Bold"><b>B</b></button>
+        <button type="button" data-md="italic" title="Italic"><i>I</i></button>
+        <button type="button" data-md="heading" title="Heading">H</button>
+        <button type="button" data-md="list" title="Bullet list">&bull; List</button>
+        <button type="button" id="revPreviewBtn" class="rev-pv" title="Preview">Preview</button>
+      </div>
+      <textarea id="fReview" class="review-ta" placeholder="Your extensive review&hellip;"></textarea>
+      <div id="revPreview" class="vw-review rev-preview" style="display:none"></div>
     </div>
 
     <div class="sheet-actions">
@@ -550,6 +630,18 @@
     <div class="sheet-actions">
       <button class="btn btn-ghost" id="btnViewClose">Close</button>
       <button class="btn btn-primary" id="btnViewEdit">Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- Peek (stats drill-down) sheet -->
+<div class="overlay" id="peekOverlay">
+  <div class="sheet" role="dialog" aria-modal="true">
+    <h2><span id="peekTitle">Stories</span><button class="close-x" id="closePeek" aria-label="Close">&times;</button></h2>
+    <div id="peekBody"></div>
+    <div class="sheet-actions">
+      <button class="btn btn-ghost" id="btnPeekClose">Close</button>
+      <button class="btn btn-primary" id="btnPeekAll">Show all</button>
     </div>
   </div>
 </div>
@@ -734,7 +826,7 @@
       if(filter !== 'all' && b.status !== filter) return false;
       if(typeFilter !== 'all' && (b.type || 'novel') !== typeFilter) return false;
       if(q){
-        var hay = (b.title+' '+(b.author||'')+' '+(b.notes||'')+' '+(b.genre||'')).toLowerCase();
+        var hay = (b.title+' '+(b.author||'')+' '+(b.notes||'')+' '+(b.review||'')+' '+(b.genre||'')).toLowerCase();
         if(hay.indexOf(q) === -1) return false;
       }
       return true;
@@ -759,6 +851,7 @@
         : esc(b.title);
       return '<div class="book-card st-'+esc(b.status)+'" data-id="'+esc(b.id)+'">'
         + '<div class="bc-top"><div class="bc-title">'+titleHtml+'</div>'
+        + (b.review ? '<span class="bc-rev" title="Has a full review">&#128221;</span>' : '')
         + '<span class="bc-type tp-'+esc(b.type||'novel')+'">'+(TYPES[b.type]||'Novel')+'</span>'
         + '<span class="bc-badge '+esc(b.status)+'">'+STATUSES[b.status]+'</span></div>'
         + (b.author ? '<div class="bc-author">'+esc(b.author)+'</div>' : '')
@@ -809,42 +902,45 @@
       + '<text x="45" y="49" text-anchor="middle" font-size="16" font-weight="bold" fill="currentColor" style="color:var(--ink)">'+total+'</text>'
       + '</svg>';
   }
-  function legendHtml(parts, total){
+  function legendHtml(parts, total, kind){
     return '<div class="legend">' + parts.map(function(p){
       var pctv = total ? Math.round(p.n/total*100) : 0;
-      return '<div><span class="dot" style="background:'+p.color+'"></span>'+esc(p.label)
+      return '<div class="lg-item" data-kind="'+kind+'" data-key="'+esc(p.key)+'" title="See these stories">'
+        +'<span class="dot" style="background:'+p.color+'"></span>'+esc(p.label)
         +'<span class="lv">'+p.n+' &middot; '+pctv+'%</span></div>';
     }).join('') + '</div>';
   }
 
   function renderStatsPanel(){
     var el = $('statsPanel');
+    document.body.classList.toggle('stats-mode', statsOpen);
     el.style.display = statsOpen ? 'block' : 'none';
     if(!books.length){
       el.innerHTML = '<div class="chart-card"><h3>Charts</h3><p style="font-size:.85rem;color:var(--ink-soft)">Add some stories first and the charts will appear here.</p></div>';
       return;
     }
     var html = '';
+    var donutSize = statsOpen ? 170 : 110;
 
     var stParts = ['reading','want','finished','dropped'].map(function(k){
-      return { label: STATUSES[k], color: ST_COLORS[k], n: books.filter(function(b){ return b.status===k; }).length };
+      return { key:k, label: STATUSES[k], color: ST_COLORS[k], n: books.filter(function(b){ return b.status===k; }).length };
     }).filter(function(p){ return p.n>0; });
     var stTotal = stParts.reduce(function(a,p){ return a+p.n; },0);
     html += '<div class="chart-card"><h3>Status overview</h3><div class="donut-wrap">'
-      + donutSvg(stParts, 110) + legendHtml(stParts, stTotal) + '</div></div>';
+      + donutSvg(stParts, donutSize) + legendHtml(stParts, stTotal, 'status') + '</div></div>';
 
     var tpParts = ['novel','manhwa','manhua','manga'].map(function(k){
-      return { label: TYPES[k], color: TP_COLORS[k], n: books.filter(function(b){ return (b.type||'novel')===k; }).length };
+      return { key:k, label: TYPES[k], color: TP_COLORS[k], n: books.filter(function(b){ return (b.type||'novel')===k; }).length };
     }).filter(function(p){ return p.n>0; });
     var tpTotal = tpParts.reduce(function(a,p){ return a+p.n; },0);
     html += '<div class="chart-card"><h3>Story types</h3><div class="donut-wrap">'
-      + donutSvg(tpParts, 110) + legendHtml(tpParts, tpTotal) + '</div></div>';
+      + donutSvg(tpParts, donutSize) + legendHtml(tpParts, tpTotal, 'type') + '</div></div>';
 
     var rc = [0,0,0,0,0], rated = 0;
     books.forEach(function(b){ if(b.rating>=1 && b.rating<=5){ rc[b.rating-1]++; rated++; } });
     if(rated){
       var maxR = Math.max.apply(null, rc) || 1;
-      html += '<div class="chart-card"><h3>Ratings</h3><div class="vbars">'
+      html += '<div class="chart-card"><h3>Ratings</h3><div class="vbars"'+(statsOpen?' style="height:150px;max-width:420px"':'')+'>'
         + rc.map(function(n,i){
             var h = Math.round(n/maxR*100);
             return '<div class="vbar"><div class="vb-n">'+(n||'')+'</div>'
@@ -856,14 +952,28 @@
 
     var gs = allGenres().slice(0,8);
     if(gs.length){
-      var maxG = gs[0].n;
+      var totalStories = books.length || 1;
       html += '<div class="chart-card"><h3>Top genres / tags</h3>'
         + gs.map(function(g){
-            return '<div class="hbar"><div class="hb-label"><span>'+esc(g.label)+'</span><span class="n">'+g.n+'</span></div>'
-              +'<div class="hb-track"><div class="hb-fill" style="width:'+Math.round(g.n/maxG*100)+'%"></div></div></div>';
+            var pw = Math.max(4, Math.round(g.n/totalStories*100));
+            var pctLabel = Math.round(g.n/totalStories*100);
+            return '<div class="hbar-click" data-kind="tag" data-key="'+esc(g.label)+'" title="See these stories">'
+              +'<div class="hbar"><div class="hb-label"><span>'+esc(g.label)+'</span><span class="n">'+g.n+' \u00B7 '+pctLabel+'%</span></div>'
+              +'<div class="hb-track"><div class="hb-fill" style="width:'+pw+'%"></div></div></div></div>';
           }).join('')
         + '</div>';
     }
+
+    // storage meter
+    var used = 0;
+    try{ used = (localStorage.getItem(KEY) || '').length * 2; }catch(e){}
+    var cap = 5 * 1024 * 1024;
+    var usedPct = Math.min(100, Math.max(1, Math.round(used / cap * 100)));
+    var usedTxt = used > 1024*1024 ? (used/1048576).toFixed(2) + ' MB' : Math.max(1, Math.round(used/1024)) + ' KB';
+    html += '<div class="chart-card"><h3>Storage</h3>'
+      + '<div class="storage-bar"><span style="width:'+usedPct+'%"></span></div>'
+      + '<div class="storage-txt">'+usedTxt+' used of ~5 MB &middot; plenty of room</div>'
+      + '</div>';
 
     el.innerHTML = html;
   }
@@ -901,6 +1011,8 @@
     $('fChCur').value  = book && book.chCur ? book.chCur : '';
     $('fChTot').value  = book && book.chTot ? book.chTot : '';
     $('fNotes').value  = book ? (book.notes||'') : '';
+    $('fReview').value = book ? (book.review||'') : '';
+    setRevPreview(false);
     $('fGenre').value  = book ? (book.genre||'') : '';
     $('fStart').value  = book ? (book.dateStart||'') : '';
     $('fEnd').value    = book ? (book.dateEnd||'') : '';
@@ -931,6 +1043,7 @@
       dateStart: $('fStart').value || '',
       dateEnd: $('fEnd').value || '',
       notes: $('fNotes').value.trim(),
+      review: $('fReview').value.trim(),
       updated: now
     };
     if(editId){
@@ -1006,6 +1119,71 @@
     reader.readAsText(file);
   }
 
+  function renderReviewHtml(txt){
+    // escape first, then light markdown: # heading, - lists, **bold**, *italic*, paragraphs
+    var safe = esc(txt);
+    safe = safe.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    safe = safe.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    var blocks = safe.split(/\n\s*\n/);
+    return blocks.map(function(block){
+      var lines = block.split('\n');
+      // bullet list block: every non-empty line starts with "- "
+      var isList = lines.length && lines.every(function(l){ return /^\s*-\s+/.test(l) || !l.trim(); });
+      if(isList){
+        return '<ul>' + lines.filter(function(l){ return l.trim(); }).map(function(l){
+          return '<li>' + l.replace(/^\s*-\s+/, '') + '</li>';
+        }).join('') + '</ul>';
+      }
+      // heading line(s): handle leading "# "
+      var out = '', body = [];
+      lines.forEach(function(l){
+        if(/^\s*#\s+/.test(l)){
+          if(body.length){ out += '<p>' + body.join('<br>') + '</p>'; body = []; }
+          out += '<h4>' + l.replace(/^\s*#\s+/, '') + '</h4>';
+        }else{
+          body.push(l);
+        }
+      });
+      if(body.length) out += '<p>' + body.join('<br>') + '</p>';
+      return out;
+    }).join('');
+  }
+
+  function mdWrap(before, after, placeholder){
+    var ta = $('fReview');
+    var st = ta.selectionStart, en = ta.selectionEnd, v = ta.value;
+    var sel = v.slice(st, en) || placeholder;
+    ta.value = v.slice(0, st) + before + sel + after + v.slice(en);
+    ta.focus();
+    ta.selectionStart = st + before.length;
+    ta.selectionEnd = st + before.length + sel.length;
+  }
+  function mdLinePrefix(prefix){
+    var ta = $('fReview');
+    var st = ta.selectionStart, en = ta.selectionEnd, v = ta.value;
+    var lineStart = v.lastIndexOf('\n', st - 1) + 1;
+    var lineEnd = v.indexOf('\n', en); if(lineEnd === -1) lineEnd = v.length;
+    var chunk = v.slice(lineStart, lineEnd);
+    var newChunk = chunk.split('\n').map(function(l){ return prefix + l; }).join('\n');
+    ta.value = v.slice(0, lineStart) + newChunk + v.slice(lineEnd);
+    ta.focus();
+    ta.selectionStart = lineStart;
+    ta.selectionEnd = lineStart + newChunk.length;
+  }
+  var revPreviewOn = false;
+  function setRevPreview(on){
+    revPreviewOn = on;
+    $('fReview').style.display = on ? 'none' : 'block';
+    var pv = $('revPreview');
+    pv.style.display = on ? 'block' : 'none';
+    $('revPreviewBtn').classList.toggle('on', on);
+    $('revPreviewBtn').textContent = on ? 'Write' : 'Preview';
+    if(on){
+      var t = $('fReview').value.trim();
+      pv.innerHTML = t ? renderReviewHtml(t) : '<p style="color:var(--ink-soft)">Nothing to preview yet.</p>';
+    }
+  }
+
   /* ---------- view details ---------- */
   var viewId = null;
   function openView(book){
@@ -1040,10 +1218,85 @@
     if(rows) html += '<dl class="vw-grid">' + rows + '</dl>';
     if(p != null) html += '<div class="bc-progress" style="margin:0 0 4px"><span style="width:'+p+'%"></span></div>';
     if(book.notes) html += '<div class="vw-notes-label">Notes</div><div class="vw-notes">'+esc(book.notes)+'</div>';
+    if(book.review){
+      html += '<div class="vw-notes-label">Review<button class="copy-rev" id="copyRev">copy text</button></div>'
+        + '<div class="vw-review">' + renderReviewHtml(book.review) + '</div>';
+    }
     $('viewBody').innerHTML = html;
+    var cr = document.getElementById('copyRev');
+    if(cr){
+      cr.addEventListener('click', function(e){
+        e.stopPropagation();
+        var doneMsg = function(ok){ toast(ok ? 'Review copied' : 'Could not copy'); };
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(book.review).then(function(){ doneMsg(true); }, function(){ doneMsg(false); });
+        }else{
+          var ta = document.createElement('textarea');
+          ta.value = book.review; document.body.appendChild(ta); ta.select();
+          try{ document.execCommand('copy'); doneMsg(true); }catch(err){ doneMsg(false); }
+          ta.remove();
+        }
+      });
+    }
     $('viewOverlay').classList.add('open');
   }
   function closeView(){ $('viewOverlay').classList.remove('open'); }
+
+  /* ---------- stats drill-down (peek) ---------- */
+  var peekKind = null, peekKey = null;
+  function peekMatches(kind, key){
+    if(kind === 'status') return books.filter(function(b){ return b.status === key; });
+    if(kind === 'type') return books.filter(function(b){ return (b.type||'novel') === key; });
+    // tag
+    var k = key.toLowerCase();
+    return books.filter(function(b){
+      return (b.genre||'').split(',').some(function(g){ return g.trim().toLowerCase() === k; });
+    });
+  }
+  function peekLabel(kind, key){
+    if(kind === 'status') return STATUSES[key];
+    if(kind === 'type') return TYPES[key];
+    return '\u201C' + key + '\u201D';
+  }
+  function openPeek(kind, key){
+    peekKind = kind; peekKey = key;
+    var list = peekMatches(kind, key);
+    list.sort(function(a,b){ return (b.updated||0)-(a.updated||0); });
+    var shown = list.slice(0,5);
+    $('peekTitle').textContent = peekLabel(kind, key) + ' \u00B7 ' + list.length + ' stor' + (list.length===1?'y':'ies');
+    $('peekBody').innerHTML = shown.map(function(b){
+      return '<div class="peek-row" data-id="'+esc(b.id)+'">'
+        + '<span class="bc-type tp-'+esc(b.type||'novel')+'">'+(TYPES[b.type]||'Novel')+'</span>'
+        + '<span class="pk-title">'+esc(b.title)+'</span>'
+        + (b.rating ? '<span class="bc-stars">'+starsHtml(b.rating)+'</span>' : '')
+        + '</div>';
+    }).join('') + (list.length > 5 ? '<div class="peek-more">+ ' + (list.length-5) + ' more</div>' : '');
+    $('btnPeekAll').textContent = 'Show all ' + list.length;
+    $('btnPeekAll').style.display = list.length ? 'block' : 'none';
+    $('peekOverlay').classList.add('open');
+  }
+  function closePeek(){ $('peekOverlay').classList.remove('open'); }
+  function exitStatsMode(){
+    if(statsOpen){
+      statsOpen = false;
+      $('btnStats').classList.remove('btnStats-on');
+      $('btnStats').textContent = 'Stats';
+      renderStatsPanel();
+    }
+  }
+  function peekShowAll(){
+    closePeek();
+    exitStatsMode();
+    if(peekKind === 'tag'){
+      filterByTag(peekKey);
+      return;
+    }
+    query = ''; $('search').value = '';
+    if(peekKind === 'status'){ filter = peekKey; typeFilter = 'all'; }
+    else { typeFilter = peekKey; filter = 'all'; }
+    renderChips(); renderTypeChips(); renderList();
+    window.scrollTo({ top: 0 });
+  }
 
   /* ---------- share ---------- */
   var shareMode = 'finished';
@@ -1326,8 +1579,9 @@
   $('btnStats').addEventListener('click', function(){
     statsOpen = !statsOpen;
     this.classList.toggle('btnStats-on', statsOpen);
+    this.textContent = statsOpen ? 'Back' : 'Stats';
     renderStatsPanel();
-    if(statsOpen) window.scrollTo({top:0});
+    window.scrollTo({top:0});
   });
   $('viewBody').addEventListener('click', function(e){
     var tagEl = e.target.closest && e.target.closest('.bc-tag');
@@ -1336,6 +1590,18 @@
       filterByTag(tagEl.getAttribute('data-tag'));
     }
   });
+  $('revToolbar').addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('button');
+    if(!btn) return;
+    if(btn.id === 'revPreviewBtn'){ setRevPreview(!revPreviewOn); return; }
+    if(revPreviewOn) setRevPreview(false);
+    var kind = btn.getAttribute('data-md');
+    if(kind === 'bold') mdWrap('**','**','bold text');
+    else if(kind === 'italic') mdWrap('*','*','italic text');
+    else if(kind === 'heading') mdLinePrefix('# ');
+    else if(kind === 'list') mdLinePrefix('- ');
+  });
+
   $('closeView').addEventListener('click', closeView);
   $('btnViewClose').addEventListener('click', closeView);
   $('viewOverlay').addEventListener('click', function(e){ if(e.target === this) closeView(); });
@@ -1344,6 +1610,23 @@
     for(var i=0;i<books.length;i++){ if(books[i].id === viewId){ book = books[i]; break; } }
     closeView();
     if(book) openSheet(book);
+  });
+
+  $('statsPanel').addEventListener('click', function(e){
+    var t = e.target.closest && e.target.closest('.lg-item, .hbar-click');
+    if(t) openPeek(t.getAttribute('data-kind'), t.getAttribute('data-key'));
+  });
+  $('closePeek').addEventListener('click', closePeek);
+  $('btnPeekClose').addEventListener('click', closePeek);
+  $('peekOverlay').addEventListener('click', function(e){ if(e.target === this) closePeek(); });
+  $('btnPeekAll').addEventListener('click', peekShowAll);
+  $('peekBody').addEventListener('click', function(e){
+    var row = e.target.closest && e.target.closest('.peek-row');
+    if(!row) return;
+    var id = row.getAttribute('data-id');
+    var book = null;
+    for(var i=0;i<books.length;i++){ if(books[i].id===id){ book = books[i]; break; } }
+    if(book){ closePeek(); openView(book); }
   });
 
   $('btnShare').addEventListener('click', function(){
@@ -1383,6 +1666,7 @@
       if($('overlay').classList.contains('open')) closeSheet();
       $('shareOverlay').classList.remove('open');
       closeView();
+      closePeek();
     }
   });
 
