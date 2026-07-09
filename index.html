@@ -366,6 +366,21 @@
   .btn-ghost{background:var(--panel);color:var(--ink-soft);border:1px solid var(--line)}
   .btn-danger{background:none;border:none;color:var(--danger);font-size:.85rem;margin-top:14px;width:100%;cursor:pointer;text-decoration:underline;padding:8px}
 
+  .fld{position:relative}
+  .tag-suggest{
+    display:none;position:absolute;left:0;right:0;top:100%;z-index:40;
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    box-shadow:var(--shadow);margin-top:3px;padding:5px;
+    max-height:170px;overflow-y:auto;
+  }
+  .tag-suggest.show{display:flex;flex-wrap:wrap;gap:5px}
+  .tag-suggest button{
+    background:var(--panel);border:1px solid var(--line);border-radius:999px;
+    padding:5px 12px;font-size:.82rem;cursor:pointer;color:var(--ink);
+  }
+  .tag-suggest button:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+  .tag-suggest .ts-n{font-size:.7rem;color:var(--ink-soft);margin-left:4px}
+  .tag-suggest button:hover .ts-n{color:#fff}
   .review-ta{min-height:160px;border-radius:0 0 10px 10px !important;border-top:none !important}
   .rev-toolbar{
     display:flex;gap:4px;background:var(--panel);border:1px solid var(--line);
@@ -701,13 +716,13 @@
     </div>
     <div class="fld">
       <label for="fGenre">Main tags &mdash; genre (comma separated)</label>
-      <input id="fGenre" type="text" list="genreList" placeholder="e.g. BL, comedy, omegaverse">
-      <datalist id="genreList"></datalist>
+      <input id="fGenre" type="text" autocomplete="off" placeholder="e.g. BL, comedy, omegaverse">
+      <div class="tag-suggest" id="genreSuggest"></div>
     </div>
     <div class="fld">
       <label for="fTags2">Secondary tags (comma separated)</label>
-      <input id="fTags2" type="text" list="tags2List" placeholder="e.g. unhinged, cryingtop, funny af">
-      <datalist id="tags2List"></datalist>
+      <input id="fTags2" type="text" autocomplete="off" placeholder="e.g. unhinged, cryingtop, funny af">
+      <div class="tag-suggest" id="tags2Suggest"></div>
     </div>
     <div class="fld">
       <label for="fNotes">Notes</label>
@@ -1020,14 +1035,46 @@
   }
   function allGenres(){ return tagPool('genre'); }
   function allTags2(){ return tagPool('tags2'); }
-  function refreshGenreList(){
-    $('genreList').innerHTML = allGenres().map(function(g){
-      return '<option value="'+esc(g.label)+'">';
-    }).join('');
-    $('tags2List').innerHTML = allTags2().map(function(g){
-      return '<option value="'+esc(g.label)+'">';
-    }).join('');
+  function refreshGenreList(){ /* replaced by live tag suggester */ }
+  function attachTagSuggest(inputId, boxId, poolFn){
+    var inp = $(inputId), box = $(boxId);
+    function currentParts(){
+      return inp.value.split(',').map(function(x){ return x.trim().toLowerCase(); });
+    }
+    function render(){
+      var parts = inp.value.split(',');
+      var frag = parts[parts.length-1].trim().toLowerCase();
+      var chosen = currentParts().slice(0,-1);
+      var matches = poolFn().filter(function(g){
+        var k = g.label.toLowerCase();
+        if(chosen.indexOf(k) !== -1) return false;
+        if(!frag) return true;                       // just typed a comma: show all remaining
+        if(k === frag) return false;                 // exact already typed
+        return k.indexOf(frag) !== -1;
+      }).slice(0, 12);
+      if(!matches.length){ box.classList.remove('show'); box.innerHTML=''; return; }
+      box.innerHTML = matches.map(function(g){
+        return '<button type="button" data-pick="'+esc(g.label)+'">'+esc(g.label)+'<span class="ts-n">'+g.n+'</span></button>';
+      }).join('');
+      box.classList.add('show');
+    }
+    inp.addEventListener('input', render);
+    inp.addEventListener('focus', render);
+    inp.addEventListener('blur', function(){ setTimeout(function(){ box.classList.remove('show'); }, 180); });
+    inp.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ box.classList.remove('show'); e.stopPropagation(); } });
+    box.addEventListener('mousedown', function(e){ e.preventDefault(); }); // keep input focus
+    box.addEventListener('click', function(e){
+      var b = e.target.closest && e.target.closest('button[data-pick]');
+      if(!b) return;
+      var parts = inp.value.split(',');
+      parts[parts.length-1] = ' ' + b.getAttribute('data-pick');
+      inp.value = parts.join(',').replace(/^\s+/, '') + ', ';
+      inp.focus();
+      render();
+    });
   }
+  attachTagSuggest('fGenre', 'genreSuggest', allGenres);
+  attachTagSuggest('fTags2', 'tags2Suggest', allTags2);
 
   function donutSvg(parts, size){
     var total = parts.reduce(function(a,p){ return a+p.n; },0);
