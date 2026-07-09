@@ -288,6 +288,32 @@
   }
   .star-input button.on{color:var(--accent)}
   .star-input .clear-r{font-size:.75rem;color:var(--ink-soft);margin-left:6px;background:none;border:none;cursor:pointer;text-decoration:underline}
+  .star-input button.half{
+    background:linear-gradient(90deg,var(--accent) 50%,var(--line) 50%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+  }
+  .star-input .zero-btn{
+    font-size:.8rem;font-family:Verdana,sans-serif;font-weight:700;
+    border:1px solid var(--line);border-radius:8px;padding:4px 9px;
+    color:var(--ink-soft);background:var(--card);margin-right:4px;
+  }
+  .star-input .zero-btn.on{background:var(--dropped);border-color:var(--dropped);color:#fff}
+  .rating-hint{font-size:.72rem;color:var(--ink-soft);margin-top:4px}
+  .st-half{
+    background:linear-gradient(90deg,currentColor 50%,var(--line) 50%);
+    -webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .bc-zero{
+    flex:0 0 auto;font-size:.7rem;font-weight:700;font-family:Verdana,sans-serif;
+    padding:2px 8px;border-radius:999px;background:var(--dropped);color:#fff;
+  }
+  .vw-zero{
+    margin:2px 0 12px;padding:10px 13px;border-left:4px solid var(--dropped);
+    background:var(--panel);border-radius:0 10px 10px 0;
+    font-style:italic;font-size:.88rem;color:var(--ink-soft);
+  }
 
   .sheet-actions{display:flex;gap:10px;margin-top:18px}
   .btn{
@@ -588,9 +614,11 @@
     <div class="fld">
       <label>Rating</label>
       <div class="star-input" id="starInput">
+        <button class="zero-btn" id="zeroBtn" title="Zero stars. We were all rooting for you.">0&#9733;</button>
         <button data-v="1">&#9733;</button><button data-v="2">&#9733;</button><button data-v="3">&#9733;</button><button data-v="4">&#9733;</button><button data-v="5">&#9733;</button>
         <button class="clear-r" id="clearRating">clear</button>
       </div>
+      <div class="rating-hint">Tap a star twice for a half (&#9733;&frac12;)</div>
     </div>
     <div class="fld">
       <label for="fGenre">Genre / tags (comma separated)</label>
@@ -805,8 +833,20 @@
 
   function starsHtml(r){
     var out = '';
-    for(var i=1;i<=5;i++) out += '<span class="'+(i<=r?'':'off')+'">&#9733;</span>';
+    var full = Math.floor(r), half = (r % 1) >= 0.5;
+    for(var i=1;i<=5;i++){
+      if(i <= full) out += '<span>&#9733;</span>';
+      else if(half && i === full + 1) out += '<span class="st-half">&#9733;</span>';
+      else out += '<span class="off">&#9733;</span>';
+    }
     return out;
+  }
+  function starsText(b){
+    if(b.zero) return '0\u2605';
+    if(!b.rating) return '';
+    var t = Array(Math.floor(b.rating)+1).join('\u2605');
+    if(b.rating % 1) t += '\u00BD';
+    return t;
   }
 
   function sorted(list){
@@ -856,7 +896,7 @@
         + '<span class="bc-badge '+esc(b.status)+'">'+STATUSES[b.status]+'</span></div>'
         + (b.author ? '<div class="bc-author">'+esc(b.author)+'</div>' : '')
         + '<div class="bc-meta">'
-        + (b.rating ? '<span class="bc-stars">'+starsHtml(b.rating)+'</span>' : '')
+        + (b.zero ? '<span class="bc-zero" title="We were all rooting for you">0&#9733;</span>' : (b.rating ? '<span class="bc-stars">'+starsHtml(b.rating)+'</span>' : ''))
         + chTxt
         + (b.genre ? b.genre.split(',').map(function(g){ g=g.trim(); return g?'<span class="bc-ch bc-tag" data-tag="'+esc(g)+'" role="button" title="Show all &quot;'+esc(g)+'&quot; stories">'+esc(g)+'</span>':''; }).join('') : '')
         + '</div>'
@@ -936,16 +976,24 @@
     html += '<div class="chart-card"><h3>Story types</h3><div class="donut-wrap">'
       + donutSvg(tpParts, donutSize) + legendHtml(tpParts, tpTotal, 'type') + '</div></div>';
 
-    var rc = [0,0,0,0,0], rated = 0;
-    books.forEach(function(b){ if(b.rating>=1 && b.rating<=5){ rc[b.rating-1]++; rated++; } });
+    var rc = [0,0,0,0,0], rated = 0, zeroCount = 0;
+    books.forEach(function(b){
+      if(b.zero){ zeroCount++; rated++; return; }
+      if(b.rating >= 0.5 && b.rating <= 5){
+        var bucket = Math.min(5, Math.max(1, Math.round(b.rating)));
+        rc[bucket-1]++; rated++;
+      }
+    });
     if(rated){
-      var maxR = Math.max.apply(null, rc) || 1;
+      var bars = rc.map(function(n,i){ return { n:n, label:(i+1)+'&#9733;' }; });
+      if(zeroCount) bars.unshift({ n:zeroCount, label:'0&#9733;' });
+      var maxR = Math.max.apply(null, bars.map(function(x){ return x.n; })) || 1;
       html += '<div class="chart-card"><h3>Ratings</h3><div class="vbars"'+(statsOpen?' style="height:150px;max-width:420px"':'')+'>'
-        + rc.map(function(n,i){
-            var h = Math.round(n/maxR*100);
-            return '<div class="vbar"><div class="vb-n">'+(n||'')+'</div>'
-              +'<div class="vb-fill" style="height:'+(n? Math.max(h,4):2)+'%"></div>'
-              +'<div class="vb-l">'+(i+1)+'&#9733;</div></div>';
+        + bars.map(function(x){
+            var h = Math.round(x.n/maxR*100);
+            return '<div class="vbar"><div class="vb-n">'+(x.n||'')+'</div>'
+              +'<div class="vb-fill" style="height:'+(x.n? Math.max(h,4):2)+'%"></div>'
+              +'<div class="vb-l">'+x.label+'</div></div>';
           }).join('')
         + '</div></div>';
     }
@@ -995,12 +1043,18 @@
       btns[i].className = (btns[i].getAttribute('data-tp')===tp) ? 'sel-type' : '';
     }
   }
-  function setRating(r){
+  var curZero = false;
+  function setRating(r, zero){
     curRating = r;
+    curZero = !!zero;
     var btns = $('starInput').querySelectorAll('button[data-v]');
     for(var i=0;i<btns.length;i++){
-      btns[i].classList.toggle('on', Number(btns[i].getAttribute('data-v')) <= r);
+      var v = Number(btns[i].getAttribute('data-v'));
+      btns[i].classList.remove('on','half');
+      if(v <= Math.floor(r)) btns[i].classList.add('on');
+      else if(v - 0.5 === r) btns[i].classList.add('half');
     }
+    $('zeroBtn').classList.toggle('on', curZero);
   }
   function openSheet(book){
     editId = book ? book.id : null;
@@ -1019,7 +1073,7 @@
     refreshGenreList();
     setStatus(book ? book.status : 'want');
     setType(book ? (book.type || 'novel') : 'novel');
-    setRating(book ? (book.rating||0) : 0);
+    setRating(book ? (book.rating||0) : 0, book ? !!book.zero : false);
     $('btnDelete').style.display = book ? 'block' : 'none';
     $('overlay').classList.add('open');
     if(!book) setTimeout(function(){ $('fTitle').focus(); }, 250);
@@ -1039,6 +1093,7 @@
       chCur: parseInt($('fChCur').value,10) || 0,
       chTot: parseInt($('fChTot').value,10) || 0,
       rating: curRating,
+      zero: curZero,
       genre: $('fGenre').value.trim(),
       dateStart: $('fStart').value || '',
       dateEnd: $('fEnd').value || '',
@@ -1196,8 +1251,9 @@
     html += '<div class="vw-badges">'
       + '<span class="bc-type tp-'+esc(book.type||'novel')+'">'+(TYPES[book.type]||'Novel')+'</span>'
       + '<span class="bc-badge '+esc(book.status)+'">'+STATUSES[book.status]+'</span>'
-      + (book.rating ? '<span class="bc-stars">'+starsHtml(book.rating)+'</span>' : '')
+      + (book.zero ? '<span class="bc-zero">0&#9733;</span>' : (book.rating ? '<span class="bc-stars">'+starsHtml(book.rating)+'</span>' : ''))
       + '</div>';
+    if(book.zero) html += '<div class="vw-zero">\u201CI was rooting for you! We were ALL rooting for you!\u201D \u2014 0 stars</div>';
     var rows = '';
     if(book.chCur || book.chTot){
       rows += '<dt>Chapters</dt><dd>' + (book.chCur||0) + (book.chTot ? ' / ' + book.chTot : '') + (p != null ? ' &middot; ' + p + '%' : '') + '</dd>';
@@ -1268,7 +1324,7 @@
       return '<div class="peek-row" data-id="'+esc(b.id)+'">'
         + '<span class="bc-type tp-'+esc(b.type||'novel')+'">'+(TYPES[b.type]||'Novel')+'</span>'
         + '<span class="pk-title">'+esc(b.title)+'</span>'
-        + (b.rating ? '<span class="bc-stars">'+starsHtml(b.rating)+'</span>' : '')
+        + (b.zero ? '<span class="bc-zero">0&#9733;</span>' : (b.rating ? '<span class="bc-stars">'+starsHtml(b.rating)+'</span>' : ''))
         + '</div>';
     }).join('') + (list.length > 5 ? '<div class="peek-more">+ ' + (list.length-5) + ' more</div>' : '');
     $('btnPeekAll').textContent = 'Show all ' + list.length;
@@ -1428,7 +1484,7 @@
       var ty = y + 25;
       ctx.fillStyle = ink;
       ctx.font = 'bold 15px Georgia, serif';
-      var starsTxt = b.rating ? Array(b.rating+1).join('\u2605') : '';
+      var starsTxt = starsText(b);
       var starW = starsTxt ? ctx.measureText(starsTxt).width + 28 : 0;
       ctx.fillText(trunc(b.title, W - pad*2 - starW - 10, 'bold 15px Georgia, serif'), pad + 4, ty);
       if(starsTxt){
@@ -1484,7 +1540,8 @@
       + '<div class="pr-sub">' + list.length + ' stor' + (list.length===1?'y':'ies')
       + ' \u00B7 ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear() + '</div>';
     html += list.map(function(b){
-      var stars = b.rating ? ' <span class="pr-stars">' + Array(b.rating+1).join('\u2605') + '</span>' : '';
+      var starsT = starsText(b);
+      var stars = starsT ? ' <span class="pr-stars">' + starsT + '</span>' : '';
       var metaTxt = shareMeta(b);
       return '<div class="pr-item"><div class="pr-title">' + esc(b.title) + stars + '</div>'
         + (metaTxt ? '<div class="pr-meta">' + esc(metaTxt) + '</div>' : '')
@@ -1514,9 +1571,16 @@
   });
   $('starInput').addEventListener('click', function(e){
     var v = e.target.getAttribute && e.target.getAttribute('data-v');
-    if(v) setRating(Number(v));
+    if(v){
+      v = Number(v);
+      setRating(curRating === v ? v - 0.5 : v, false);
+      return;
+    }
+    if(e.target.id === 'zeroBtn'){
+      setRating(0, !curZero);
+    }
   });
-  $('clearRating').addEventListener('click', function(){ setRating(0); });
+  $('clearRating').addEventListener('click', function(){ setRating(0, false); });
 
   $('chips').addEventListener('click', function(e){
     var f = e.target.closest && e.target.closest('.chip');
