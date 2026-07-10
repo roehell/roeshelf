@@ -396,6 +396,16 @@
   .btn-danger{background:none;border:none;color:var(--danger);font-size:.85rem;margin-top:14px;width:100%;cursor:pointer;text-decoration:underline;padding:8px}
 
   .fld{position:relative}
+  .dup-hint{
+    display:none;margin-top:6px;padding:8px 11px;border-radius:10px;
+    background:var(--panel);border:1px solid var(--accent);
+    font-size:.8rem;color:var(--ink);line-height:1.45;
+  }
+  .dup-hint.show{display:block}
+  .dup-hint .dh-open{
+    background:none;border:none;color:var(--accent-dark);cursor:pointer;
+    text-decoration:underline;font-size:.8rem;padding:0;margin-left:4px;
+  }
   .tag-suggest{
     display:none;position:absolute;left:0;right:0;top:100%;z-index:40;
     background:var(--card);border:1px solid var(--line);border-radius:10px;
@@ -683,6 +693,7 @@
     <div class="fld">
       <label for="fTitle">Title *</label>
       <input id="fTitle" type="text" placeholder="e.g. Agreement Mark">
+      <div class="dup-hint" id="dupHint"></div>
     </div>
     <div class="fld">
       <label for="fAlt">Alternative title(s)</label>
@@ -1294,8 +1305,33 @@
     setRating(book ? (book.rating||0) : 0, book ? !!book.zero : false, book ? !!book.jaw : false);
     $('btnDelete').style.display = book ? 'block' : 'none';
     sheetSnapshot = formSnapshot();
+    renderDupHint();
     $('overlay').classList.add('open');
     if(!book) setTimeout(function(){ $('fTitle').focus(); }, 250);
+  }
+  function findDuplicate(titleVal){
+    var t = titleVal.trim().toLowerCase();
+    if(t.length < 2) return null;
+    for(var i=0;i<books.length;i++){
+      var b = books[i];
+      if(editId && b.id === editId) continue;
+      if(b.title.trim().toLowerCase() === t) return b;
+      var alts = (b.alt||'').split(';');
+      for(var j=0;j<alts.length;j++){
+        if(alts[j].trim().toLowerCase() === t && alts[j].trim()) return b;
+      }
+    }
+    return null;
+  }
+  function renderDupHint(){
+    var box = $('dupHint');
+    var dup = findDuplicate($('fTitle').value);
+    if(!dup){ box.classList.remove('show'); box.innerHTML=''; return; }
+    var rate = dup.jaw ? '\uD83E\uDD2F speechless' : (dup.zero ? '0\u2605' : (dup.rating ? starsText(dup) : 'unrated'));
+    box.innerHTML = '\u26A0\uFE0F Already on your shelf: <b>'+esc(dup.title)+'</b> ('
+      + STATUSES[dup.status] + ' \u00B7 ' + rate + ')'
+      + '<button class="dh-open" data-id="'+esc(dup.id)+'">view it</button>';
+    box.classList.add('show');
   }
   var sheetSnapshot = '';
   function formSnapshot(){
@@ -1966,6 +2002,18 @@
     else if(kind === 'list') mdLinePrefix('- ');
   });
 
+  $('fTitle').addEventListener('input', renderDupHint);
+  $('dupHint').addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('.dh-open');
+    if(!b) return;
+    var id = b.getAttribute('data-id');
+    var book = null;
+    for(var i=0;i<books.length;i++){ if(books[i].id===id){ book = books[i]; break; } }
+    if(!book) return;
+    closeSheet();                              // dirty-guard may ask first
+    if($('overlay').classList.contains('open')) return;  // user chose to stay
+    openView(book);
+  });
   $('closeView').addEventListener('click', closeView);
   $('btnViewClose').addEventListener('click', closeView);
   $('viewOverlay').addEventListener('click', function(e){ if(e.target === this) closeView(); });
