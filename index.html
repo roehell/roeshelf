@@ -27,21 +27,24 @@
     --danger:#D9534F;
     --radius:14px;
     --shadow:0 2px 8px rgba(59,50,38,.08);
+    --prog2:#F2809F;
+    --tp-novel:#E08E0B;--tp-manhwa:#5B8DD9;--tp-manhua:#4C9A6B;--tp-manga:#C97BB2;
   }
   html[data-theme="dark"]{
-    --bg:#15110D;
-    --card:#241C15;
-    --panel:#2F251C;
-    --accent:#F09E1F;
-    --accent-dark:#FFB447;
-    --ink:#F4EBDA;
-    --ink-soft:#AB9D86;
-    --line:#3A2E23;
-    --reading:#57A97B;
-    --want:#6E9BDE;
-    --finished:#F09E1F;
-    --dropped:#7E7264;
+    --bg:#17110D;
+    --card:#2A2018;
+    --panel:#352A1F;
+    --accent:#D99A28;
+    --accent-dark:#F5C76A;
+    --ink:#EEE3D0;
+    --ink-soft:#B89E84;
+    --line:#4A3517;
+    --reading:#58B584;
+    --want:#6FA0E8;
+    --finished:#D99A28;
+    --dropped:#8A7A66;
     --shadow:0 2px 12px rgba(0,0,0,.55);
+    --prog2:#D98BC0;
   }
   html[data-theme="cinna"]{
     --bg:#E3EEF6;
@@ -52,10 +55,11 @@
     --ink:#33475C;
     --ink-soft:#75909F;
     --line:#C8DCEA;
-    --reading:#57B287;
-    --want:#A98BD1;
+    --reading:#84B8AC;
+    --want:#CC9BBB;
     --finished:#5FA8DC;
-    --dropped:#A3B5C2;
+    --dropped:#90908E;
+    --tp-novel:#EABCA8;--tp-manhwa:#8FB3CC;--tp-manhua:#84B8AC;--tp-manga:#D9A5C2;
     --shadow:0 3px 10px rgba(95,168,220,.2);
     --radius:22px;
   }
@@ -76,7 +80,7 @@
   html[data-theme="cinna"] .btn,
   html[data-theme="cinna"] .search-row input{border-radius:18px}
   html[data-theme="cinna"] .stat{border-radius:16px}
-  html[data-theme="cinna"] .book-card{border-left-width:0;border:2px solid var(--line);position:relative}
+  html[data-theme="cinna"] .book-card{position:relative}
   html[data-theme="cinna"] .book-card.st-reading{border-color:var(--reading)}
   html[data-theme="cinna"] .book-card.st-want{border-color:var(--want)}
   html[data-theme="cinna"] .book-card.st-finished{border-color:var(--finished)}
@@ -101,14 +105,32 @@
   }
   html[data-theme="dark"] .bc-badge.finished{color:#211B14}
   html[data-theme="dark"] .fab{box-shadow:0 4px 14px rgba(252,165,29,.35)}
-  html[data-theme="dark"] .book-card,
   html[data-theme="dark"] .chart-card,
   html[data-theme="dark"] .stat{
     border:1px solid var(--line);
-    box-shadow:none;
   }
-  html[data-theme="dark"] .book-card{border-left-width:5px}
+  html[data-theme="dark"] .book-card,
+  html[data-theme="dark"] .chart-card,
+  html[data-theme="dark"] .stat{box-shadow:none}
   html[data-theme="dark"] .sheet{border:1px solid var(--line)}
+  html[data-theme="dark"] .bc-tag-main{
+    background:transparent;border:1px solid var(--accent);color:var(--accent);font-weight:700;
+  }
+  html[data-theme="dark"] .bc-tag-main:hover{background:var(--accent);color:#131417}
+  html[data-theme="dark"] .bc-ch{background:var(--panel);color:var(--ink-soft)}
+  html[data-theme="dark"] .bc-progress{background:var(--panel)}
+  /* orange rationing: titles cream, hover brings the gold */
+  html[data-theme="dark"] .bc-title a,
+  html[data-theme="dark"] .vw-title a{color:var(--ink);border-bottom-color:var(--line)}
+  html[data-theme="dark"] .bc-title a:hover,
+  html[data-theme="dark"] .vw-title a:hover{color:var(--accent-dark);border-bottom-color:var(--accent)}
+  /* sidebar stat numbers cream */
+  html[data-theme="dark"] .stat .n{color:var(--ink)}
+  /* uniform thin card borders; status lives in the badge; hover glows */
+  html[data-theme="dark"] .book-card{border:1px solid #6B4A1C !important}
+  html[data-theme="dark"] .book-card:hover{border-color:var(--accent) !important}
+  /* All types chip: readable text on the cream chip */
+  html[data-theme="dark"] .type-chips .chip.active[data-t="all"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
   html[data-theme="dark"] #toast{background:#F0E7D8;color:#211B14}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
@@ -173,14 +195,17 @@
     padding:3px 8px;border-radius:6px;text-transform:uppercase;
     font-family:Verdana,sans-serif;color:#fff;border:1px solid transparent;
   }
-  .bc-type.tp-novel{background:#E08E0B}
-  .bc-type.tp-manhwa{background:#5B8DD9}
-  .bc-type.tp-manhua{background:#4C9A6B}
-  .bc-type.tp-manga{background:#C97BB2}
-  .type-chips .chip.active.tc-novel{background:#E08E0B;border-color:#E08E0B;color:#fff}
-  .type-chips .chip.active.tc-manhwa{background:#5B8DD9;border-color:#5B8DD9;color:#fff}
-  .type-chips .chip.active.tc-manhua{background:#4C9A6B;border-color:#4C9A6B;color:#fff}
-  .type-chips .chip.active.tc-manga{background:#C97BB2;border-color:#C97BB2;color:#fff}
+  .bc-type.tp-novel{background:var(--tp-novel)}
+  .bc-type.tp-manhwa{background:var(--tp-manhwa)}
+  .bc-type.tp-manhua{background:var(--tp-manhua)}
+  .bc-type.tp-manga{background:var(--tp-manga)}
+  .type-chips .chip.active.tc-novel{background:var(--tp-novel);border-color:var(--tp-novel);color:#fff}
+  .type-chips .chip.active.tc-manhwa{background:var(--tp-manhwa);border-color:var(--tp-manhwa);color:#fff}
+  .type-chips .chip.active.tc-manhua{background:var(--tp-manhua);border-color:var(--tp-manhua);color:#fff}
+  .type-chips .chip.active.tc-manga{background:var(--tp-manga);border-color:var(--tp-manga);color:#fff}
+  html[data-theme="cinna"] .bc-type,
+  html[data-theme="cinna"] .type-chips .chip.active{color:#3F5468 !important}
+  html[data-theme="cinna"] .type-chips .chip.active[data-t="all"]{color:#fff !important}
 
   .sort-row{display:flex;align-items:center;gap:8px;margin-top:8px}
   .sort-row label{font-size:.78rem;color:var(--ink-soft)}
@@ -199,13 +224,14 @@
 
   .book-card{
     background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
-    padding:14px 14px 12px;margin-bottom:12px;border-left:5px solid var(--dropped);
+    padding:14px 14px 12px;margin-bottom:12px;border:2px solid var(--line);
     cursor:pointer;transition:transform .1s;
   }
   .book-card:active{transform:scale(.99)}
-  .book-card.st-reading{border-left-color:var(--reading)}
-  .book-card.st-want{border-left-color:var(--want)}
-  .book-card.st-finished{border-left-color:var(--finished)}
+  .book-card.st-reading{border-color:var(--reading)}
+  .book-card.st-want{border-color:var(--want)}
+  .book-card.st-finished{border-color:var(--finished)}
+  .book-card.st-dropped{border-color:var(--dropped)}
   .bc-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
   .bc-title{font-weight:700;font-size:1.02rem;line-height:1.3}
   .bc-title a{color:var(--accent-dark);text-decoration:none;border-bottom:1px dotted var(--accent)}
@@ -220,6 +246,9 @@
   .bc-badge.dropped{background:var(--dropped)}
   .bc-alt{font-size:.78rem;color:var(--ink-soft);margin-top:2px}
   .bc-author{font-size:.85rem;color:var(--ink-soft);margin-top:2px;font-style:italic}
+  .bc-author-link{cursor:pointer;border-bottom:1px dotted transparent}
+  .bc-author-link:hover{color:var(--accent-dark);border-bottom-color:var(--accent)}
+  .bc-tag:not(.bc-tag-main){font-size:.64rem;padding:2px 8px;opacity:.9}
   .bc-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;align-items:center}
   .bc-stars{color:var(--accent);font-size:.95rem;letter-spacing:2px}
   .bc-stars .off{color:var(--line)}
@@ -242,7 +271,7 @@
   .tags-sec-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);font-family:Verdana,sans-serif;margin:14px 0 4px}
   .see-all-tags{background:none;border:none;color:var(--accent-dark);font-size:.75rem;cursor:pointer;text-decoration:underline;float:right;font-family:Verdana,sans-serif;text-transform:none;letter-spacing:0}
   .bc-progress{height:5px;background:var(--line);border-radius:3px;margin-top:9px;overflow:hidden}
-  .bc-progress span{display:block;height:100%;background:var(--accent);border-radius:3px}
+  .bc-progress span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--prog2,var(--accent)));border-radius:3px}
   .bc-dates{
     margin-top:8px;font-size:.74rem;color:var(--ink-soft);
     font-family:Verdana,sans-serif;letter-spacing:.2px;
@@ -441,6 +470,7 @@
   }
   .vw-notes-label{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-soft);font-family:Verdana,sans-serif;margin:12px 0 5px}
   .seg-share button.sel-share{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+  #segShare{grid-template-columns:repeat(3,1fr)}
   .share-count{font-size:.85rem;color:var(--ink-soft);margin:2px 2px 6px}
   #printArea{display:none}
   @media print{
@@ -659,8 +689,8 @@
       <input id="fAlt" type="text" placeholder="Original / romaji / other names &mdash; separate with ;">
     </div>
     <div class="fld">
-      <label for="fAuthor">Author</label>
-      <input id="fAuthor" type="text" placeholder="Author name">
+      <label for="fAuthor">Author(s)</label>
+      <input id="fAuthor" type="text" placeholder="One or more, comma separated">
     </div>
     <div class="fld">
       <label for="fLink">Link (where you read it)</label>
@@ -795,6 +825,7 @@
         <button data-sh="reading">Reading now</button>
         <button data-sh="loved">Loved (4&#9733;+)</button>
         <button data-sh="want">Want to read</button>
+        <button data-sh="dropped">Dropped</button>
       </div>
     </div>
     <div class="fld">
@@ -1006,7 +1037,7 @@
         + '<span class="bc-type tp-'+esc(b.type||'novel')+'">'+(TYPES[b.type]||'Novel')+'</span>'
         + '<span class="bc-badge '+esc(b.status)+'">'+STATUSES[b.status]+'</span></div>'
         + (b.alt ? '<div class="bc-alt">'+esc(b.alt)+'</div>' : '')
-        + (b.author ? '<div class="bc-author">'+esc(b.author)+'</div>' : '')
+        + (b.author ? '<div class="bc-author">'+b.author.split(',').map(function(a){ a=a.trim(); return a?'<span class="bc-author-link" data-author="'+esc(a)+'" role="button" title="Show all stories by '+esc(a)+'">'+esc(a)+'</span>':''; }).filter(Boolean).join(', ')+'</div>' : '')
         + '<div class="bc-meta">'
         + (b.jaw ? '<span class="bc-jaw" title="Jaw: on floor. Unliftable.">&#129327; speechless</span>' : (b.zero ? '<span class="bc-zero" title="We were all rooting for you">0&#9733;</span>' : (b.rating ? '<span class="bc-stars">'+starsHtml(b.rating)+'</span>' : '')))
         + chTxt
@@ -1112,15 +1143,17 @@
     var html = '';
     var donutSize = statsOpen ? 210 : 110;
 
+    var STC = { reading:cssVar('--reading'), want:cssVar('--want'), finished:cssVar('--finished'), dropped:cssVar('--dropped') };
+    var TPC = { novel:cssVar('--tp-novel'), manhwa:cssVar('--tp-manhwa'), manhua:cssVar('--tp-manhua'), manga:cssVar('--tp-manga') };
     var stParts = ['reading','want','finished','dropped'].map(function(k){
-      return { key:k, label: STATUSES[k], color: ST_COLORS[k], n: books.filter(function(b){ return b.status===k; }).length };
+      return { key:k, label: STATUSES[k], color: STC[k], n: books.filter(function(b){ return b.status===k; }).length };
     }).filter(function(p){ return p.n>0; });
     var stTotal = stParts.reduce(function(a,p){ return a+p.n; },0);
     html += '<div class="chart-card"><h3>Status overview</h3><div class="donut-wrap">'
       + donutSvg(stParts, donutSize) + legendHtml(stParts, stTotal, 'status') + '</div></div>';
 
     var tpParts = ['novel','manhwa','manhua','manga'].map(function(k){
-      return { key:k, label: TYPES[k], color: TP_COLORS[k], n: books.filter(function(b){ return (b.type||'novel')===k; }).length };
+      return { key:k, label: TYPES[k], color: TPC[k], n: books.filter(function(b){ return (b.type||'novel')===k; }).length };
     }).filter(function(p){ return p.n>0; });
     var tpTotal = tpParts.reduce(function(a,p){ return a+p.n; },0);
     html += '<div class="chart-card"><h3>Story types</h3><div class="donut-wrap">'
@@ -1450,7 +1483,7 @@
       ? '<a href="'+esc(book.link)+'" target="_blank" rel="noopener">'+esc(book.title)+'</a>'
       : esc(book.title)) + '</div>';
     if(book.alt) html += '<div class="bc-alt" style="margin:-2px 0 4px">'+esc(book.alt)+'</div>';
-    if(book.author) html += '<div class="vw-author">'+esc(book.author)+'</div>';
+    if(book.author) html += '<div class="vw-author">'+book.author.split(',').map(function(a){ a=a.trim(); return a?'<span class="bc-author-link" data-author="'+esc(a)+'" role="button">'+esc(a)+'</span>':''; }).filter(Boolean).join(', ')+'</div>';
     html += '<div class="vw-badges">'
       + '<span class="bc-type tp-'+esc(book.type||'novel')+'">'+(TYPES[book.type]||'Novel')+'</span>'
       + '<span class="bc-badge '+esc(book.status)+'">'+STATUSES[book.status]+'</span>'
@@ -1612,7 +1645,8 @@
     finished: { label: 'Stories I finished', test: function(b){ return b.status === 'finished'; } },
     reading:  { label: 'What I\u2019m reading right now', test: function(b){ return b.status === 'reading'; } },
     loved:    { label: 'Stories I loved', test: function(b){ return (b.rating || 0) >= 4; } },
-    want:     { label: 'My want-to-read list', test: function(b){ return b.status === 'want'; } }
+    want:     { label: 'My want-to-read list', test: function(b){ return b.status === 'want'; } },
+    dropped:  { label: 'Stories I dropped', test: function(b){ return b.status === 'dropped'; } }
   };
   function bookYear(b){
     var d = b.dateEnd || b.dateStart;
@@ -1855,6 +1889,12 @@
     toast('Showing \u201C' + tag + '\u201D stories \u2014 clear search to see all');
   }
   $('list').addEventListener('click', function(e){
+    var auEl = e.target.closest && e.target.closest('.bc-author-link');
+    if(auEl){
+      e.stopPropagation();
+      filterByTag(auEl.getAttribute('data-author'));
+      return;
+    }
     var tagEl = e.target.closest && e.target.closest('.bc-tag');
     if(tagEl){
       e.stopPropagation();
@@ -1891,6 +1931,7 @@
     var next = THEME_ORDER[(idx + 1) % THEME_ORDER.length];
     applyTheme(next);
     try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+    renderStatsPanel();
   });
 
   $('btnStats').addEventListener('click', function(){
@@ -1901,6 +1942,12 @@
     window.scrollTo({top:0});
   });
   $('viewBody').addEventListener('click', function(e){
+    var auEl = e.target.closest && e.target.closest('.bc-author-link');
+    if(auEl){
+      closeView();
+      filterByTag(auEl.getAttribute('data-author'));
+      return;
+    }
     var tagEl = e.target.closest && e.target.closest('.bc-tag');
     if(tagEl){
       closeView();
